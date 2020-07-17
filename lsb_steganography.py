@@ -52,21 +52,17 @@ class LsbStega():
                     result_img_pixels[x, y] = src_img_pixels[x, y]
 
                 else:
-                    print("pixel must be changed to",
-                          data_to_hide[current_position])
                     pixel = src_img_pixels[x, y]
                     blue_binary = self.fill_bits(bin(pixel[BLUE])[2:], 8)
-                    print("blue bits:", blue_binary)
                     blue_binary = blue_binary[:-1] + \
                         data_to_hide[current_position]
-                    print("blue bits new:", blue_binary)
                     result_img_pixels[x, y] = (
                         src_img_pixels[x, y][RED], src_img_pixels[x, y][GREEN], int(blue_binary, 2))
-                    print("src pixel:", src_img_pixels[x, y])
-                    print("result pixel:", result_img_pixels[x, y])
+                    print(
+                        "src pixel:", src_img_pixels[x, y], "--> result pixel:", result_img_pixels[x, y])
 
                 current_position += 1
-        return
+        result_img.save('./images/stega_image.png')
 
 
 def main():
