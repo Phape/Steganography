@@ -24,7 +24,7 @@ class LsbStega():
     def fill_bits(self, value, bitcount):
         return value.zfill(bitcount * ((len(value) + (bitcount-1)) // bitcount))
 
-    def encode_text(self, img_location, text):
+    def encode_text(self, img_path, text):
         text_length_binary = bin(len(text))[2:]
 
         text_length_bits = self.fill_bits(text_length_binary, 16)
@@ -33,7 +33,7 @@ class LsbStega():
         data_to_hide = text_length_bits + text_as_bits
         print("data to hide:", data_to_hide)
 
-        img = Image.open(img_location)
+        img = Image.open(img_path)
         src_img_pixels = img.load()
         RED = 0
         GREEN = 1
@@ -66,8 +66,14 @@ class LsbStega():
 
 
 def main():
+    action = input("(e) Encode image (hide message) or (d) Decode image (extract message): ")
     stega = LsbStega()
-    stega.encode_text('./sample_picture.png', "A")
+    if action == 'e':
+        img_path = input("Enter the path to the image: ")
+        text = input("Enter your hidden message: ")
+        stega.encode_text(img_path, text)
+    elif action == 'd':
+        print("Not yet implemented")
 
 
 if __name__ == "__main__":
