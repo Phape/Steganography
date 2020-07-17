@@ -2,6 +2,7 @@
 # ord: char --> int
 from PIL import Image
 
+default_sample_img_path = './images/sample_image.png'
 default_stega_img_path = './images/stega_image.png'
 
 # Indices
@@ -30,7 +31,7 @@ class LsbStega():
     def fill_bits(self, value, bitcount):
         return value.zfill(bitcount * ((len(value) + (bitcount-1)) // bitcount))
 
-    def encode_text(self, img_path, text):
+    def encode_text(self, text, img_path=default_sample_img_path):
         print("Hiding text in picture")
         text_length_binary = bin(len(text))[2:]
         text_length_bits = self.fill_bits(text_length_binary, 16)
@@ -63,7 +64,8 @@ class LsbStega():
 
                 current_position += 1
         result_img.save(default_stega_img_path)
-        print("Your text was hidden in the picture saved at", default_stega_img_path)
+        print("Your text was hidden in the picture saved at",
+              default_stega_img_path)
 
     def decode_text(self, img_path=default_stega_img_path):
         print("Extracting text from picture")
@@ -99,13 +101,19 @@ def main():
         "(e) Encode image (hide message) or (d) Decode image (extract message): ")
     stega = LsbStega()
     if action == 'e':
-        img_path = input("Enter the path to the image: ")
+        img_path = input(
+            "Enter the path to the image (leave empty for default): ")
         text = input("Enter your hidden message: ")
-        stega.encode_text(img_path, text)
-    elif action == 'd':
-        img_path = input("Enter the path to the image (leave empty for default): ")
         if img_path:
-           text = stega.decode_text(img_path=img_path)
+            stega.encode_text(text, img_path)
+        else:
+            stega.encode_text(text)
+
+    elif action == 'd':
+        img_path = input(
+            "Enter the path to the image (leave empty for default): ")
+        if img_path:
+            text = stega.decode_text(img_path=img_path)
         else:
             text = stega.decode_text()
         print("Extracted text:", text)
